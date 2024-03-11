@@ -8,19 +8,21 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     # Connect to the server
     s.connect(server_address)
     
-    while True:
-        # Get input message from user
-        message = input("Enter message to send (type 'quit' to exit): ")
-        
-        # Send message to the server
-        s.sendall(message.encode())
-        
-        # If user wants to quit, break the loop
-        if message.lower() == 'quit':
-            break
-        
-        # Receive response from the server
-        data = s.recv(1024)
-        
-        # Print the received message from the server
-        print('Received:', data.decode())
+    # Open the file for reading
+    with open("data.txt", "r") as file:
+        # Read file line by line
+        for line in file:
+            # Strip newline character and split by space to separate device ID and radius
+            device_id, radius = line.strip().split()
+            
+            # Construct the message to send to the server
+            message = f"{device_id} {radius}\n"  # Make sure to add newline at the end
+            
+            # Send message to the server
+            s.sendall(message.encode())
+            
+            # Receive response from the server
+            data = s.recv(1024)
+            
+            # Print the received message from the server
+            print('Received:', data.decode())

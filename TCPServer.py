@@ -10,15 +10,20 @@ async def tcp_server():
         await server.serve_forever()
 
 async def handle_client(reader, writer):
-    data = await reader.read(100)
-    message = data.decode()
     addr = writer.get_extra_info('peername')
+    print(f"Connection from {addr}")
 
-    print(f"Received {message} from {addr}")
-
-    print("Send: %r" % message)
-    writer.write(data)
-    await writer.drain()
+    while True:
+        data = await reader.readline()
+        if not data:
+            break
+        
+        message = data.decode().strip()
+        print(f"Received {message} from {addr}")
+        
+        # Echo back to the client
+        writer.write(data)
+        await writer.drain()
 
     print("Closing the connection")
     writer.close()
