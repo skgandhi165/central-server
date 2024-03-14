@@ -18,7 +18,7 @@ async def connect_to_db():
     )
 
 async def tcp_server():
-    server = await asyncio.start_server(handle_client, '127.0.0.1', 8888)
+    server = await asyncio.start_server(handle_client, '0.0.0.0', 50001)
 
     async with server:
         await server.serve_forever()
@@ -36,8 +36,8 @@ async def handle_client(reader, writer):
         print(f"Received {message} from {addr}")
         
         # Insert data into PostgreSQL database
-        async with pool.acquire() as connection:
-            await connection.execute("INSERT INTO device_data (device_id, radius) VALUES ($1, $2)", *message.split())
+        # async with pool.acquire() as connection:
+        #     await connection.execute("INSERT INTO device_data (device_id, radius) VALUES ($1, $2)", *message.split())
         
         # Echo back to the client
         writer.write(data)
