@@ -37,7 +37,7 @@ async def handle_client(reader, writer):
         
         # Insert data into PostgreSQL database
         async with pool.acquire() as connection:
-            await connection.execute("INSERT INTO bt_data (device_id, radius) VALUES ($1, $2)", *message.split())
+            await connection.execute("INSERT INTO device_data (device_id, radius) VALUES ($1, $2)", *message.split())
         
         # Echo back to the client
         writer.write(data)
