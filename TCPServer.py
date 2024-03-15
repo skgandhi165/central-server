@@ -1,11 +1,16 @@
 from fastapi import FastAPI
 import asyncio
 import asyncpg
+from datetime import datetime
 
 app = FastAPI()
 
 # Database connection pool
 pool = None
+
+async def clear_database():
+    async with pool.acquire() as connection:
+        await connection.execute("DELETE FROM device_data")
 
 async def connect_to_db():
     global pool
@@ -34,11 +39,13 @@ async def handle_client(reader, writer):
         
         message = data.decode().strip()
         print(f"Received {message} from {addr}")
+
+        now = str(datetime.now())
         
         # Insert data into PostgreSQL database
         # async with pool.acquire() as connection:
-        #     await connection.execute("INSERT INTO device_data (device_id, radius) VALUES ($1, $2)", *message.split())
-        
+        #     await connection.execute("INSERT INTO device_data (device_id, radius, time) VALUES ($1, $2, $3)", *message.split(), now)
+
         # Echo back to the client
         writer.write(data)
         await writer.drain()
@@ -49,4 +56,5 @@ async def handle_client(reader, writer):
 @app.on_event("startup")
 async def startup_event():
     await connect_to_db()
+    await clear_database()
     asyncio.create_task(tcp_server())
