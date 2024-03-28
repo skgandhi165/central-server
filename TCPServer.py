@@ -40,12 +40,21 @@ async def handle_client(reader, writer):
         message = data.decode().strip()
         print(f"Received {message} from {addr}")
 
+        message_array = message.split()
+        bleber_id = message_array[2]
+        device_id = message_array[9]
+        radius = message_array[12][:-1]
         now = str(datetime.now())
         
         # Insert data into PostgreSQL database
-        # async with pool.acquire() as connection:
-        #     await connection.execute("INSERT INTO device_data (device_id, radius, time) VALUES ($1, $2, $3)", *message.split(), now)
-
+        async with pool.acquire() as connection:
+            # await connection.execute("INSERT INTO device_data (device_id, radius, time) VALUES ($1, $2, $3)", *message.split(), now)
+            if bleber_id == '0,':
+                await connection.execute("INSERT INTO bleber_1_data (device_id, radius, time) VALUES ($1, $2, $3)", device_id, radius, now)
+            elif bleber_id == '1,':
+                await connection.execute("INSERT INTO bleber_2_data (device_id, radius, time) VALUES ($1, $2, $3)", device_id, radius, now)
+            elif bleber_id == '2,':
+                await connection.execute("INSERT INTO bleber_3_data (device_id, radius, time) VALUES ($1, $2, $3)", device_id, radius, now)
         # Echo back to the client
         writer.write(data)
         await writer.drain()
