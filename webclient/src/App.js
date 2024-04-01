@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Container from './components/MapContainer';
+import NavigationBar from './components/NavBar';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -42,6 +44,7 @@ function App() {
 
   return (
     <div className="App">
+        <NavigationBar />
       <Container 
         zoomLevel={zoomLevel} 
         setZoomLevel={setZoomLevel}
