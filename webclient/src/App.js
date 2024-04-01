@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Container from './components/MapContainer';
 
@@ -12,19 +12,36 @@ function App() {
     setDots(currentDots => [...currentDots, newDot]);
   };
 
+  useEffect(() => {
+    // Replace 'ws://example.com/ws' with your WebSocket server URL
+    const ws = new WebSocket('ws://example.com/ws');
 
-  // Function to handle button click
-  const handleAddDotClick = () => {
-    // Generate random x, y within the map dimensions for demonstration
-    // You might want to replace this with specific logic to determine where to add the dot
-    const x = Math.floor(Math.random() * 10);
-    const y = Math.floor(Math.random() * 10);
-    addDot(x, y, 'blue'); // Add a new dot with random position
-  };
+    ws.onopen = () => {
+      console.log('WebSocket Connected');
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        // Assuming the message format is { x: number, y: number, color: string }
+        addDot(message.x, message.y, message.color);
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket Disconnected');
+    };
+
+    // Clean up the WebSocket connection when the component unmounts
+    return () => {
+      ws.close();
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   return (
     <div className="App">
-      <button onClick={handleAddDotClick}>Add Dot</button>
       <Container 
         zoomLevel={zoomLevel} 
         setZoomLevel={setZoomLevel}
