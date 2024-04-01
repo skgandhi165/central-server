@@ -1,6 +1,7 @@
 .floor-map-container {
   position: relative;
-
+  width: 100vw; /* 100% of the viewport width */
+  height: 100vh; /* 100% of the viewport height */
   background-image: url('nre2floor.png');
   background-size: contain; /* This will make sure the image is fully visible but might not cover the whole container */
   background-repeat: no-repeat; /* Prevents the image from repeating */

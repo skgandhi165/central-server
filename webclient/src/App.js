@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     // Replace 'ws://example.com/ws' with your WebSocket server URL
-    const ws = new WebSocket('ws://example.com/ws');
+    const ws = new WebSocket('ws://localhost:8000/ws');
 
     ws.onopen = () => {
       console.log('WebSocket Connected');
