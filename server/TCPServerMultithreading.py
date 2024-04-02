@@ -51,15 +51,17 @@ async def handle_client(reader, writer, table_name):
         print(f"Received {message} from {addr}")
 
         message_array = message.split()
-        bleber_id = message_array[2] # Not needed anymore if correct bleber is populating correct port
-        device_id = message_array[9]
-        radius = message_array[11][:-1]
-        now = str(datetime.now())
-        
-        # Insert data into PostgreSQL database
-        print(message)
-        # async with pool.acquire() as connection:
-        #     await connection.execute(f"INSERT INTO {table_name} (device_id, radius, time) VALUES ($1, $2, $3)", device_id, radius, now)
+
+        if len(message_array > 10):
+            bleber_id = message_array[2] # Not needed anymore if correct bleber is populating correct port
+            device_id = message_array[9]
+            radius = message_array[11][:-1]
+            now = str(datetime.now())
+            
+            print(message_array)
+            # Insert data into PostgreSQL database
+            async with pool.acquire() as connection:
+                await connection.execute(f"INSERT INTO {table_name} (device_id, radius, time) VALUES ($1, $2, $3)", device_id, radius, now)
         
         # Echo back to the client
         writer.write(data)
