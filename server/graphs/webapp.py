@@ -19,14 +19,14 @@ sensor_data = {'A5:3E:6R:G0':[-50, -48, -46, -47, -43, -44, -44, -42, -40, -42],
 for key, value in sensor_data.items():
     all_sensors['sensor0'].add_device(key, value)
 
-sensor_data = {'A5:3E:6R:G0':[-30, -28, -36, -40, -31, -32, -36, -30, -32, -28],
-                'D5:6T:Y7:U8':[-30, -28, -36, -40, -31, -32, -36, -30, -32, -28]}
+sensor_data = {'A5:3E:6R:G0':[-45, -43, -44, -45, -42, -45, -47, -49, -42, -44],
+                'D5:6T:Y7:U8':[-45, -43, -44, -45, -42, -45, -47, -49, -42, -44]}
 
 for key, value in sensor_data.items():
     all_sensors['sensor1'].add_device(key, value)
 
-sensor_data = {'A5:3E:6R:G0':[-60, -48, -61, -62, -64, -67, -60, -61, -62, -63],
-                'D5:6T:Y7:U8':[-60, -48, -61, -62, -64, -67, -60, -61, -62, -63]}
+sensor_data = {'A5:3E:6R:G0':[-16, -15, -20, -10, -15, -15, -17, -17, -16, -15],
+                'D5:6T:Y7:U8':[-16, -15, -20, -10, -15, -15, -17, -17, -16, -15]}
 
 for key, value in sensor_data.items():
     all_sensors['sensor2'].add_device(key, value)
@@ -48,7 +48,7 @@ STEP 3: Send the graph instance NREFFloor2Graph to the front end to obtain the h
 
 TODO: Send graph to FastAPI endpoint for the web app front end
 '''
-print(f"HEAT: {NREFFloor2Graph.vertices['2-118'].heat_level}")
+print(f"HEAT: {NREFFloor2Graph.vertices['2-117'].heat_level}")
 
 
 

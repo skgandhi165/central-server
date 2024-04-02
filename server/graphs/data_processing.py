@@ -39,13 +39,14 @@ class DataProcessing:
         self.sensorA = all_sensors[sensor_group[0]]
         self.sensorB = all_sensors[sensor_group[1]]
         self.sensorC = all_sensors[sensor_group[2]]
-        self.sensor_positions = [self.sensorA.coordinates, self.sensorB.coordinates, self.sensorB.coordinates]
+        self.sensor_positions = [self.sensorA.coordinates, self.sensorB.coordinates, self.sensorC.coordinates]
         self.graph = NREFFloor2Graph
         self.node_coordinates = {}
         for node in nodes:
             self.node_coordinates[node] = self.graph.vertices[node].coordinates # graph vertices being monitored by the sensor group
 
         self.common_devices_keys = self.sensorA.devices.keys() & self.sensorB.devices.keys() & self.sensorC.devices.keys()
+        print(f"Common devices: {self.common_devices_keys}")
         self.common_devices_position = {}
         self.calculate_positions()
         self.process_heat()
@@ -53,17 +54,23 @@ class DataProcessing:
     # Calculate the device position using trileration
     def calculate_positions(self):
         for common_device in self.common_devices_keys:
+            print(f"Calculating for {common_device}")
+
             rssi_A = self.sensorA.devices[common_device]
             distance_A = getSensorDistance(rssi_A)
+            print(f"distanceA:{distance_A}")
 
             rssi_B = self.sensorB.devices[common_device]
             distance_B = getSensorDistance(rssi_B)
+            print(f"distanceA:{distance_B}")
 
             rssi_C = self.sensorC.devices[common_device]
             distance_C = getSensorDistance(rssi_C)
+            print(f"distanceA:{distance_C}")
 
             distances = [distance_A, distance_B, distance_C]
 
+            print(f"Sensor Positions: {self.sensor_positions}")
             device_position = trilaterate(self.sensor_positions, distances)
             self.common_devices_position[common_device] = device_position
     
